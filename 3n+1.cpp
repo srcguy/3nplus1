@@ -1,66 +1,26 @@
-﻿#include <iostream>
+#include <iostream>
 #include <chrono>
-#include <fstream>
-#include <string>
-#include <filesystem>
 
-using namespace std::chrono;
-using namespace std;
-namespace fs = std::filesystem;
-int x;
-string command;
+int main() {
+    auto start = std::chrono::high_resolution_clock::now();
 
-int main(){
-    cout << ">>>";
-    cin >> command;
-    if (command == "DEL" || "del") {
-        for (const auto& entry : fs::directory_iterator("data")) {
-            fs::remove(entry.path());
+    int count = 0;
+
+    for (long long i = 1; i <= 10000000; ++i) {
+        long long current = i;
+
+        while (current != 1) {
+            current = (current % 2 == 0) ? current / 2 : 3 * current + 1;
         }
+
+        ++count;
     }
-    cout << ">";
-    cin >> x;
 
-    auto start_time = high_resolution_clock::now();
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-    cout << "WORKING..." << endl;
+    std::cout << "Total sequences: " << count << std::endl;
+    std::cout << "Execution time: " << duration.count() << " milliseconds" << std::endl;
 
-    int y = x;
-
-    string filename = "data/" + to_string(y) + ".txt";
-    ofstream file((filename));
-    file << x << "\n";
-
-    while (true){
-
-        string filename = "data/" + to_string(y) + ".txt";
-        ofstream file(filename, ios::app);
-        file << x << "\n";
-
-        if (x % 2 == 0) {
-            x = x / 2;
-        }
-        else {
-            x = 3 * x + 1;
-        }
-
-        if (x == 1) {
-            //cout << "LOOP" << endl;
-            file << "LOOP" << "\n";
-            file.close();
-            x = y + 1;
-            y = x;
-        }
-
-        if (y >= 101) {
-            cout << "EMERGENCY BREAK" << endl;
-            auto end_time = high_resolution_clock::now();
-            auto duration = duration_cast<milliseconds>(end_time - start_time);
-            cout << duration.count();
-            break;
-        }
-
-        //cout << x << endl;
-
-    }
+    return 0;
 }
